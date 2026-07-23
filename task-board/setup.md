@@ -1,0 +1,1 @@
+install prisma : npm install --save-dev prisma dotenv
