@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { signIn } from "next-auth/react";
 
-export default function TaskboardSignUpForm() {
+export default function TaskboardLoginForm() {
   const router = useRouter();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -15,23 +14,56 @@ export default function TaskboardSignUpForm() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Perform registration logic
-    console.log("Taskboard Sign Up:", { name, email, password });
+//login logic
+   console.log("Taskboard Login:", { email, password });
 
-    const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-    if (!response.ok) {
-      throw new Error("Failed to sign up");
-    }
-    // router.push("/account/login");
-    alert("User created successfully");
+try {
+  
+   //use nextauth 
+   const res = await signIn("credentials", {
+    email,
+    password,
+    redirect: false,
+   }); 
+   if (res?.error) {
+    alert(res.error);
     setIsLoading(false);
-  };
+  }
+  if (res?.ok) {
+    alert("Login successful");
+    setIsLoading(false);
+    router.push("/dashboard");
+    return ;
+  }
+   console.log(res);
+} catch (error) {
+  console.error("Login error:", error);
+  alert("Login failed");
+  setIsLoading(false);
+}
+
+
+  }
+  
+
+
+
+
+  //   const response = await fetch("/api/auth/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ email, password }),
+  //   });
+  //   const data = await response.json();
+  //   console.log(data);
+  //   if (!response.ok) {
+  //     throw new Error("Failed to login");
+  //   }
+  //   alert("Login successful");
+  //   setIsLoading(false);
+  // };
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-zinc-900 px-4 font-sans text-zinc-100 antialiased selection:bg-indigo-500 selection:text-white">
@@ -43,6 +75,7 @@ export default function TaskboardSignUpForm() {
         {/* Brand Header */}
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/30">
+            {/* Taskboard Logo Icon */}
             <svg
               className="h-6 w-6 text-white"
               fill="none"
@@ -58,33 +91,15 @@ export default function TaskboardSignUpForm() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            Create an Account
+            Taskboard
           </h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Join Taskboard to start managing projects
+            Sign in to manage your workspace & tasks
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
-            >
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Alex Johnson"
-              className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900/90 px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 shadow-inner transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-          </div>
-
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="email"
@@ -104,17 +119,24 @@ export default function TaskboardSignUpForm() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
-            >
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+              >
+                Password
+              </label>
+              <a
+                href="#"
+                className="text-xs text-indigo-400 hover:text-indigo-300 hover:underline"
+              >
+                Forgot?
+              </a>
+            </div>
             <input
               id="password"
               type="password"
               required
-              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -125,7 +147,7 @@ export default function TaskboardSignUpForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="mt-2 flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:opacity-95 active:scale-[0.99] disabled:opacity-50"
+            className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:opacity-95 active:scale-[0.99] disabled:opacity-50"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
@@ -148,23 +170,20 @@ export default function TaskboardSignUpForm() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                   />
                 </svg>
-                Creating account...
+                Signing in...
               </span>
             ) : (
-              "Sign Up for Taskboard"
+              "Sign In to Taskboard"
             )}
           </button>
         </form>
 
         {/* Footer */}
         <p className="mt-8 text-center text-xs text-zinc-500">
-          Already have an account?{" "}
-          <Link
-            href="/account/login"
-            className="font-medium text-indigo-400 hover:underline"
-          >
-            Sign in
-          </Link>
+          Don&apos;t have an account?{" "}
+          <a href="#" className="font-medium text-indigo-400 hover:underline">
+            Request access
+          </a>
         </p>
       </div>
     </div>

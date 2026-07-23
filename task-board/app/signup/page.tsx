@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function TaskboardLoginForm() {
+export default function TaskboardSignUpForm() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -13,23 +15,21 @@ export default function TaskboardLoginForm() {
     e.preventDefault();
     setIsLoading(true);
 
-//login logic
-   console.log("Taskboard Login:", { email, password });
+    // Perform registration logic
+    console.log("Taskboard Sign Up:", { name, email, password });
 
-
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    console.log(data);
+    const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
     if (!response.ok) {
-      throw new Error("Failed to login");
+      throw new Error("Failed to sign up");
     }
-    alert("Login successful");
+    // router.push("/account/login");
+    alert("User created successfully");
     setIsLoading(false);
   };
 
@@ -43,7 +43,6 @@ export default function TaskboardLoginForm() {
         {/* Brand Header */}
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/30">
-            {/* Taskboard Logo Icon */}
             <svg
               className="h-6 w-6 text-white"
               fill="none"
@@ -59,15 +58,33 @@ export default function TaskboardLoginForm() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            Taskboard
+            Create an Account
           </h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Sign in to manage your workspace & tasks
+            Join Taskboard to start managing projects
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+            >
+              Full Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Alex Johnson"
+              className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900/90 px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 shadow-inner transition duration-200 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -87,24 +104,17 @@ export default function TaskboardLoginForm() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
-              >
-                Password
-              </label>
-              <a
-                href="#"
-                className="text-xs text-indigo-400 hover:text-indigo-300 hover:underline"
-              >
-                Forgot?
-              </a>
-            </div>
+            <label
+              htmlFor="password"
+              className="block text-xs font-semibold uppercase tracking-wider text-zinc-400"
+            >
+              Password
+            </label>
             <input
               id="password"
               type="password"
               required
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -115,7 +125,7 @@ export default function TaskboardLoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:opacity-95 active:scale-[0.99] disabled:opacity-50"
+            className="mt-2 flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:opacity-95 active:scale-[0.99] disabled:opacity-50"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
@@ -138,20 +148,23 @@ export default function TaskboardLoginForm() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                   />
                 </svg>
-                Signing in...
+                Creating account...
               </span>
             ) : (
-              "Sign In to Taskboard"
+              "Sign Up for Taskboard"
             )}
           </button>
         </form>
 
         {/* Footer */}
         <p className="mt-8 text-center text-xs text-zinc-500">
-          Don&apos;t have an account?{" "}
-          <a href="#" className="font-medium text-indigo-400 hover:underline">
-            Request access
-          </a>
+          Already have an account?{" "}
+          <Link
+            href="/pages/account/login"
+            className="font-medium text-indigo-400 hover:underline"
+          >
+            Sign in
+          </Link>
         </p>
       </div>
     </div>

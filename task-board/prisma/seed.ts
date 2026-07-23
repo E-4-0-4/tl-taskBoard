@@ -68,6 +68,7 @@ async function main() {
   });
 
   console.log('Taskboard database seeded successfully');
+  
 }
 
 main()
