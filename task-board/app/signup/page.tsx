@@ -30,7 +30,9 @@ export default function TaskboardSignUpForm() {
     }
     // router.push("/account/login");
     alert("User created successfully");
+    router.push("/login");
     setIsLoading(false);
+    return ;
   };
 
   return (
@@ -160,7 +162,7 @@ export default function TaskboardSignUpForm() {
         <p className="mt-8 text-center text-xs text-zinc-500">
           Already have an account?{" "}
           <Link
-            href="/pages/account/login"
+            href="/login"
             className="font-medium text-indigo-400 hover:underline"
           >
             Sign in

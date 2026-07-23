@@ -26,8 +26,9 @@ try {
     redirect: false,
    }); 
    if (res?.error) {
-    alert(res.error);
+    alert("invalid credentials");
     setIsLoading(false);
+    return ;
   }
   if (res?.ok) {
     alert("Login successful");
@@ -40,6 +41,7 @@ try {
   console.error("Login error:", error);
   alert("Login failed");
   setIsLoading(false);
+  return ;
 }
 
 
@@ -181,7 +183,7 @@ try {
         {/* Footer */}
         <p className="mt-8 text-center text-xs text-zinc-500">
           Don&apos;t have an account?{" "}
-          <a href="#" className="font-medium text-indigo-400 hover:underline">
+          <a href="/signup" className="font-medium text-indigo-400 hover:underline">
             Request access
           </a>
         </p>
