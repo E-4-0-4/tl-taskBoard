@@ -12,7 +12,7 @@ async function getAuthUser() {
   return session.user;
 }
 
-// 1. Fetch All Tasks
+// 1. Fetch All Tasks  
 export async function getTasks() {
   await getAuthUser();
   return await prisma.task.findMany({
