@@ -178,6 +178,22 @@ try {
               "Sign In to Taskboard"
             )}
           </button>
+
+
+ {/* show password for demo login access only */}
+ <div className="text-center text-xs text-zinc-500">
+  <p>Demo Login Access for testing purposes:</p>
+  <p>Email: admin@taskboard.com</p>
+   <p>email: sagar@taskboard.com</p>
+   <p>email: abc@taskboard.com</p>
+   
+
+  <p>common password for all users: </p>
+  <p>Password: password123</p>
+ </div>
+
+
+          
         </form>
 
         {/* Footer */}
