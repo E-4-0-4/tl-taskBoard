@@ -1,0 +1,6 @@
+# DATABASE_URL="postgresql://postgres:password@localhost:5432/kanban_db?schema=public"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/taskboard?schema=public"
+JWT_SECRET="mysecretkey"
+AUTH_SECRET="your-super-secret-key-at-least-32-chars-long"
+NEXTAUTH_SECRET="your-super-secret-key-at-least-32-chars-long"
+
