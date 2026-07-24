@@ -61,6 +61,9 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+import { loginRatelimit } from "@/lib/ratelimit";
+import { headers } from "next/headers";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
@@ -75,8 +78,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+
+
+        // const headersList = await headers();
+        // const ip = headersList.get("x-forwarded-for") ?? "127.0.0.1";
+        // const { success } = await loginRatelimit.limit(ip);
+
+        // if (!success) {
+        //   throw new Error("Too many requests");
+        // }
+        
+        // if (credentials?.email) {
+        //   const emailLimit = await loginRatelimit.limit(`login_email:${credentials.email}`);
+        //   if (!emailLimit.success) {
+        //     throw new Error("Too many failed attempts for this account. Try again later.");
+        //   }
+        // }
+
+
+
         const email = credentials?.email as string | undefined;
         const password = credentials?.password as string | undefined;
+
+//validation data for sql injection xss attacks and other attacks
+
+
 
         if (!email || !password) return null;
 
